@@ -1,3 +1,8 @@
+bash
+
+cat /home/claude/sk3d_site.html
+Sortie
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -84,7 +89,64 @@ body{background:var(--bg);color:var(--white);font-family:'Exo 2',sans-serif;over
   box-shadow:0 0 8px var(--electric);
   transition:width 0.1s linear;
 }
-.scanline{
+.css-particles{
+  position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;
+  overflow:hidden;pointer-events:none;
+  background:linear-gradient(135deg,#04060f 0%,#07101f 50%,#04060f 100%);
+}
+.css-particles::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,100,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(0,150,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(0,80,200,0.04) 0%, transparent 60%);
+}
+.css-particles::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,100,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,100,255,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:gridMove 20s linear infinite;
+}
+@keyframes gridMove{from{transform:translateY(0);}to{transform:translateY(60px);}}
+
+/* Floating dots via JS-free approach */
+.dot-float{
+  position:absolute;border-radius:50%;
+  background:rgba(0,150,255,0.6);
+  animation:floatDot linear infinite;
+}
+@keyframes floatDot{
+  0%{transform:translateY(100vh) scale(0);opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{transform:translateY(-100px) scale(1);opacity:0;}
+}
+
+/* Hero background */
+.hero-bg-anim{
+  position:absolute;inset:0;z-index:0;
+  background:linear-gradient(135deg,#04060f 0%,#070c1a 100%);
+  overflow:hidden;
+}
+.hero-bg-anim::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,80,200,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,80,200,0.05) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.hero-bg-anim::after{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,100,255,0.08) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:heroPulse 4s ease-in-out infinite;
+}
+@keyframes heroPulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.2);}}
+
+.scanline{.scanline{
   position:absolute;inset:0;pointer-events:none;z-index:1;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
 }
@@ -145,6 +207,7 @@ nav.scrolled{background:rgba(4,6,15,0.97);}
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   position:relative;padding:100px 5% 60px;
   text-align:center;overflow:hidden;
+  isolation:isolate;
 }
 #accueil canvas{position:absolute;inset:0;z-index:0;}
 .hero-content{position:relative;z-index:1;max-width:900px;}
@@ -511,7 +574,7 @@ footer{
 
 <!-- ══ INTRO ANIMATION ══ -->
 <div id="intro">
-  <canvas id="introCanvas"></canvas>
+  <div class="css-particles" id="cssParticles"></div>
   <div class="scanline" style="position:absolute;inset:0;z-index:1;pointer-events:none;"></div>
   <div class="intro-content">
     <div class="intro-logo">
@@ -547,7 +610,7 @@ footer{
 
 <!-- ══ HERO ══ -->
 <section id="accueil">
-  <canvas id="heroCanvas" style="position:absolute;inset:0;z-index:0;"></canvas>
+  <div class="hero-bg-anim"></div>
   <div class="hero-content">
     <div class="hero-badge">⚡ Intervention rapide 24h — Alsace 67 · 68</div>
     <h1 class="hero-title">
@@ -866,50 +929,25 @@ footer{
 </footer>
 
 <script>
-// ══ CANVAS PARTICLES ══
-function initParticles(canvasId, count=60) {
-  const canvas = document.getElementById(canvasId);
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  function resize() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+// ══ CSS FLOATING DOTS ══
+function initParticles(canvasId, count=60) { /* replaced by CSS */ }
+function createFloatingDots() {
+  const container = document.getElementById('cssParticles');
+  if(!container) return;
+  for(let i=0;i<40;i++){
+    const dot = document.createElement('div');
+    dot.className = 'dot-float';
+    const size = Math.random()*3+1;
+    dot.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      animation-duration:${Math.random()*15+8}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:${Math.random()*0.6+0.2};
+      background:${Math.random()>.5?'rgba(0,150,255,0.7)':'rgba(255,255,255,0.5)'};
+    `;
+    container.appendChild(dot);
   }
-  resize();
-  window.addEventListener('resize', resize);
-  const pts = Array.from({length:count}, () => ({
-    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
-    vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4,
-    r:Math.random()*1.5+.5, a:Math.random()*.5+.1,
-    col:Math.random()>.5?'0,150,255':'255,255,255'
-  }));
-  function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    if(canvasId==='heroCanvas'){
-      const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-      g.addColorStop(0,'#04060f'); g.addColorStop(1,'#070c1a');
-      ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.strokeStyle='rgba(0,80,200,0.04)'; ctx.lineWidth=1;
-      for(let x=0;x<canvas.width;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
-      for(let y=0;y<canvas.height;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
-    }
-    pts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
-      if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${p.col},${p.a})`; ctx.fill();
-    });
-    pts.forEach((p1,i)=>pts.slice(i+1).forEach(p2=>{
-      const d=Math.hypot(p1.x-p2.x,p1.y-p2.y);
-      if(d<100){
-        ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
-        ctx.strokeStyle=`rgba(0,120,255,${.12*(1-d/100)})`; ctx.lineWidth=.5; ctx.stroke();
-      }
-    }));
-    requestAnimationFrame(draw);
-  }
-  draw();
 }
 
 // ══ INTRO ANIMATION ══
@@ -974,59 +1012,12 @@ function submitForm() {
   document.getElementById('formSuccess').style.display='block';
 }
 
-// ══ INTRO CANVAS ══
-(function(){
-  const canvas = document.getElementById('introCanvas');
-  const ctx = canvas.getContext('2d');
-  // Force canvas to fill entire screen
-  canvas.setAttribute('width', window.innerWidth);
-  canvas.setAttribute('height', window.innerHeight);
-  canvas.style.position = 'fixed';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = window.innerWidth + 'px';
-  canvas.style.height = window.innerHeight + 'px';
-  window.addEventListener('resize', ()=>{
-    canvas.setAttribute('width', window.innerWidth);
-    canvas.setAttribute('height', window.innerHeight);
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-  });
-  const pts = Array.from({length:80},()=>({
-    x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
-    vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
-    r:Math.random()*1.8+.4, a:Math.random()*.5+.1,
-    col:Math.random()>.5?'0,150,255':'255,255,255'
-  }));
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-    g.addColorStop(0,'#04060f'); g.addColorStop(1,'#070c1a');
-    ctx.fillStyle=g; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.strokeStyle='rgba(0,80,200,0.04)'; ctx.lineWidth=1;
-    for(let x=0;x<canvas.width;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
-    for(let y=0;y<canvas.height;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
-    pts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
-      if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${p.col},${p.a})`; ctx.fill();
-    });
-    pts.forEach((p1,i)=>pts.slice(i+1).forEach(p2=>{
-      const d=Math.hypot(p1.x-p2.x,p1.y-p2.y);
-      if(d<100){
-        ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
-        ctx.strokeStyle=`rgba(0,120,255,${.12*(1-d/100)})`; ctx.lineWidth=.5; ctx.stroke();
-      }
-    }));
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
+// ══ INIT DOTS ══
+createFloatingDots();
 
 // ══ START ══
 document.body.style.overflow='hidden';
+createFloatingDots();
 startIntro();
 </script>
 </body>

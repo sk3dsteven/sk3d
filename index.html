@@ -1,43 +1,345 @@
-bash
+export default function SK3DWebsite() {
+  const services = [
+    {
+      title: 'Dératisation',
+      desc: 'Traitement des rats, souris et rongeurs avec protocoles sécurisés et efficaces.'
+    },
+    {
+      title: 'Désinsectisation',
+      desc: 'Élimination des cafards, punaises de lit, guêpes, frelons et insectes nuisibles.'
+    },
+    {
+      title: 'Désinfection',
+      desc: 'Protocoles sanitaires professionnels conformes HACCP pour particuliers et entreprises.'
+    }
+  ]
 
-python3 << 'EOF'
-content = open('/home/claude/sk3d_site.html').read()
+  const argumentsList = [
+    '3 passages garantis',
+    'Intervention urgence 24h',
+    '5 ans d’expérience',
+    'Rapport HACCP 100% conforme'
+  ]
 
-# Fix the broken CSS - there's a duplicate .scanline{ that broke everything
-old = """.scanline{.scanline{
-  position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
-}"""
+  const faq = [
+    {
+      q: 'Intervenez-vous en urgence ?',
+      r: 'Oui, nous intervenons rapidement dans les départements 67 et 68.'
+    },
+    {
+      q: 'Les traitements sont-ils sécurisés ?',
+      r: 'Tous nos protocoles respectent les normes sanitaires et HACCP.'
+    },
+    {
+      q: 'Travaillez-vous avec les professionnels ?',
+      r: 'Oui, restaurants, hôtels, commerces, syndics et industries.'
+    }
+  ]
 
-new = """.scanline{
-  position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
-}"""
+  return (
+    <div className="min-h-screen bg-[#020817] text-white overflow-x-hidden font-sans">
+      {/* HERO */}
+      <section className="relative min-h-screen flex items-center justify-center px-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-[#020817] to-blue-700/20" />
 
-content = content.replace(old, new)
+        <div className="absolute w-[500px] h-[500px] bg-cyan-400/20 blur-3xl rounded-full animate-pulse" />
 
-# Also fix duplicate createFloatingDots call
-old2 = """// ══ INIT DOTS ══
-createFloatingDots();
+        <div className="relative z-10 text-center max-w-4xl">
+          <div className="flex justify-center items-center mb-8 gap-4">
+            <div className="w-20 h-20 border-4 border-cyan-400 rounded-full animate-ping absolute opacity-30" />
+            <div className="w-20 h-20 border-4 border-cyan-400 rounded-full" />
+            <div className="w-20 h-20 border-4 border-white rounded-full -ml-6" />
+          </div>
 
-// ══ START ══
-document.body.style.overflow='hidden';
-createFloatingDots();
-startIntro();"""
+          <h1 className="text-6xl md:text-8xl font-black tracking-widest mb-6 animate-pulse">
+            SK3D
+          </h1>
 
-new2 = """// ══ START ══
-document.body.style.overflow='hidden';
-createFloatingDots();
-startIntro();"""
+          <p className="text-xl md:text-3xl text-cyan-300 mb-10 animate-bounce">
+            Votre environnement, notre expertise.
+          </p>
 
-content = content.replace(old2, new2)
+          <p className="max-w-2xl mx-auto text-gray-300 text-lg leading-relaxed mb-10">
+            Experts en dératisation, désinsectisation et désinfection.
+            Intervention rapide dans le Bas-Rhin et Haut-Rhin.
+          </p>
 
-open('/home/claude/sk3d_site.html','w').write(content)
-print("Erreurs corrigées")
-print("Vérification .scanline:", '.scanline{.scanline{' not in content)
-EOF
-cp /home/claude/sk3d_site.html /mnt/user-data/outputs/SK3D_Site_Web.html
-Sortie
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 px-8 py-4 rounded-2xl text-lg font-bold shadow-2xl hover:scale-105 text-black">
+              Intervention Urgente
+            </button>
 
-Erreurs corrigées
-Vérification .scanline: True
+            <button className="border border-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-4 rounded-2xl text-lg font-bold hover:scale-105">
+              Demander un devis
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-black mb-6">Nos Services</h2>
+            <div className="w-32 h-1 bg-cyan-500 mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="group bg-zinc-900 border border-zinc-800 hover:border-cyan-400 rounded-3xl p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-cyan-400/20 hover:shadow-2xl"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-cyan-500 flex items-center justify-center text-2xl font-black mb-6 group-hover:rotate-6 transition-all duration-300 text-black">
+                  {index + 1}
+                </div>
+
+                <h3 className="text-3xl font-bold mb-4 text-cyan-300">
+                  {service.title}
+                </h3>
+
+                <p className="text-gray-300 leading-relaxed text-lg">
+                  {service.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ARGUMENTS */}
+      <section className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-900/20 to-black" />
+
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-black mb-6">
+              Pourquoi choisir SK3D ?
+            </h2>
+            <div className="w-32 h-1 bg-cyan-500 mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {argumentsList.map((item, index) => (
+              <div
+                key={index}
+                className="bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 rounded-3xl p-8 flex items-center gap-6 hover:border-cyan-400 transition-all duration-300"
+              >
+                <div className="w-16 h-16 bg-cyan-500 rounded-2xl flex items-center justify-center text-2xl font-black shrink-0 text-black">
+                  ✓
+                </div>
+
+                <p className="text-2xl font-semibold">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ZONE */}
+      <section className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-5xl font-black mb-10">Zone d’intervention</h2>
+
+          <div className="flex justify-center gap-10 flex-wrap mb-16">
+            <div className="text-8xl font-black text-cyan-400 animate-pulse">
+              67
+            </div>
+
+            <div className="text-8xl font-black text-white animate-pulse">
+              68
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-black border border-cyan-400 rounded-3xl p-8 text-2xl font-bold hover:scale-105 transition-all duration-300">
+              Certibiocide
+            </div>
+
+            <div className="bg-black border border-cyan-400 rounded-3xl p-8 text-2xl font-bold hover:scale-105 transition-all duration-300">
+              Nacelle
+            </div>
+
+            <div className="bg-black border border-cyan-400 rounded-3xl p-8 text-2xl font-bold hover:scale-105 transition-all duration-300">
+              RC Pro
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section className="py-24 px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/20 to-black" />
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <h2 className="text-6xl font-black mb-8 tracking-widest">SK3D</h2>
+
+          <p className="text-2xl text-cyan-300 mb-12">
+            Intervention rapide • Professionnalisme • Résultats garantis
+          </p>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-[32px] p-10 mb-10 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-lg">
+              <div>
+                <p className="text-cyan-400 font-bold mb-2">Téléphone</p>
+                <p>06 00 00 00 00</p>
+              </div>
+
+              <div>
+                <p className="text-cyan-400 font-bold mb-2">Email</p>
+                <p>contact@sk3d.fr</p>
+              </div>
+
+              <div>
+                <p className="text-cyan-400 font-bold mb-2">Zone</p>
+                <p>Bas-Rhin & Haut-Rhin</p>
+              </div>
+            </div>
+          </div>
+
+          <button className="bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 px-10 py-5 rounded-2xl text-xl font-black shadow-2xl hover:scale-105 text-black">
+            Demander une intervention
+          </button>
+        </div>
+      </section>
+
+      {/* SITE COMPLET */}
+      <section className="py-24 px-6 bg-[#07111f]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-black mb-6">
+              Un site professionnel complet
+            </h2>
+
+            <p className="text-cyan-200 text-xl max-w-3xl mx-auto">
+              Après la page de présentation animée, les visiteurs découvrent un véritable site web premium avec toutes les informations nécessaires.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="bg-[#0b1728] border border-cyan-400/20 rounded-3xl p-10 hover:border-cyan-400 transition-all duration-300 hover:-translate-y-2">
+              <h3 className="text-3xl font-black mb-6 text-cyan-300">
+                À propos
+              </h3>
+
+              <p className="text-gray-300 leading-relaxed text-lg">
+                SK3D accompagne particuliers et professionnels dans la lutte contre les nuisibles avec des méthodes modernes, rapides et conformes aux normes sanitaires.
+              </p>
+            </div>
+
+            <div className="bg-[#0b1728] border border-cyan-400/20 rounded-3xl p-10 hover:border-cyan-400 transition-all duration-300 hover:-translate-y-2">
+              <h3 className="text-3xl font-black mb-6 text-cyan-300">
+                Interventions
+              </h3>
+
+              <p className="text-gray-300 leading-relaxed text-lg">
+                Maison, appartement, restaurant, hôtel, commerce, entrepôt, copropriété et locaux industriels.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERIE */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-black mb-6">
+              Galerie d’interventions
+            </h2>
+
+            <div className="w-32 h-1 bg-cyan-400 mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-80 rounded-3xl bg-gradient-to-br from-cyan-500/20 to-blue-900/20 border border-cyan-400/20 hover:scale-105 transition-all duration-500 flex items-center justify-center text-2xl font-bold text-cyan-200"
+              >
+                Photo Intervention {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 px-6 bg-[#07111f]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-black mb-6">
+              Questions fréquentes
+            </h2>
+
+            <div className="w-32 h-1 bg-cyan-400 mx-auto rounded-full" />
+          </div>
+
+          <div className="space-y-6">
+            {faq.map((item, index) => (
+              <div
+                key={index}
+                className="bg-[#0b1728] border border-cyan-400/20 rounded-3xl p-8 hover:border-cyan-400 transition-all duration-300"
+              >
+                <h3 className="text-2xl font-bold text-cyan-300 mb-4">
+                  {item.q}
+                </h3>
+
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  {item.r}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMULAIRE */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto bg-[#0b1728] border border-cyan-400/20 rounded-[40px] p-12 shadow-2xl shadow-cyan-500/10">
+          <div className="text-center mb-12">
+            <h2 className="text-5xl font-black mb-4">
+              Demande de devis
+            </h2>
+
+            <p className="text-cyan-200 text-lg">
+              Réponse rapide et intervention professionnelle.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <input
+              placeholder="Nom"
+              className="bg-[#020817] border border-cyan-400/20 rounded-2xl px-6 py-4 outline-none focus:border-cyan-400"
+            />
+
+            <input
+              placeholder="Téléphone"
+              className="bg-[#020817] border border-cyan-400/20 rounded-2xl px-6 py-4 outline-none focus:border-cyan-400"
+            />
+          </div>
+
+          <input
+            placeholder="Email"
+            className="w-full bg-[#020817] border border-cyan-400/20 rounded-2xl px-6 py-4 outline-none focus:border-cyan-400 mb-6"
+          />
+
+          <textarea
+            placeholder="Décrivez votre problème"
+            rows={5}
+            className="w-full bg-[#020817] border border-cyan-400/20 rounded-2xl px-6 py-4 outline-none focus:border-cyan-400 mb-8"
+          />
+
+          <button className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xl py-5 rounded-2xl transition-all duration-300 hover:scale-[1.02]">
+            Envoyer la demande
+          </button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-zinc-800 py-8 text-center text-gray-500">
+        © 2026 SK3D — Tous droits réservés
+      </footer>
+    </div>
+  )
+}
